@@ -11,20 +11,28 @@ class Zombie
   end
 
   def self.new_day
+    @some_die_off
+    @spawn
+    @increase_plague_level
   end
 
   def self.some_die_off
+    @@horde.drop rand(0..10)
+    return @@horde
   end
 
   def self.spawn
     rand(@@plague_level).times do
       speed = rand(@@max_speed)
       strength = rand(@@max_strength)
-      @@horde << Zombie.new(speed,strength)
+     @@horde << Zombie.new(speed,strength)
     end
+    @@horde
   end
 
   def self.increase_plague_level
+    @@plague_level += rand(0..2)
+    return @@plague_level
   end
 
   def initialize(speed,strength)
@@ -39,12 +47,32 @@ class Zombie
   end
 
   def encounter
+    if outrun_zombie == "true"
+      puts "you have outrand the zombie!"
+    else
+      puts "oh no you did not out run the zombie! you are now a zombie!"
+      speed = rand(@@max_speed)
+      strength = rand(@@max_strength)
+      @@horde << Zombie.new(speed,strength)
+    end
+    if survive_attack == "true"
+      puts "you survived a zombie attack!!!"
+    else
+      puts "oh no! the zombie was too strong and he ate your brains!"
+    end
   end
 
   def outrun_zombie?
+    @zombie_speed < rand(@@max_speed)
   end
 
   def survive_attack?
+    @zombie_strength < rand(@@max_strength)
   end
 
 end
+
+puts Zombie.all.inspect
+Zombie.new_day
+puts Zombie.all.inspect
+zombie1 = Zombie.spawn
